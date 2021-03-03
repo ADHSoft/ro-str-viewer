@@ -1,7 +1,7 @@
 package com.skardach.ro.resource;
 
 import java.nio.Buffer;
-import javax.media.opengl.GL2;
+import com.jogamp.opengl.GL2;
 
 /**
  * Interface for accessing texture data.

@@ -22,12 +22,21 @@ public class SimpleTextureManager implements TextureManager {
 	 * magenta color to alpha when alpha is missing.
 	 */
 	public SimpleTextureManager(String iBasePath, boolean iTexturesConvertMagenta) {
-		_textureBaseDir = iBasePath;
-		_convertMagenta = iTexturesConvertMagenta;
+		//iBasePath += "\\" ;
+		_textureBaseDir = iBasePath;	//int271 
+		_convertMagenta = false;//iTexturesConvertMagenta;
 	}
 
 	@Override
 	public Texture getTexture(String iTextureName) {
+		//System.out.println(iTextureName);		//int271
+		if (iTextureName.length()>0x2e) {
+			iTextureName=iTextureName.substring(0, 0x30); //truncate junk
+		}
+		iTextureName=iTextureName.replaceAll("\0", "").replaceAll("ÿ", "");
+		iTextureName=iTextureName.replaceAll(".bmp", "");
+		//System.out.println(iTextureName);
+		
 		Texture result = null;
 		if(iTextureName != null)
 		{

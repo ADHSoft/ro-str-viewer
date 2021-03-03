@@ -1,6 +1,6 @@
 package com.skardach.ro.graphics;
 
-import javax.media.opengl.GL;
+import com.jogamp.opengl.GL;
 /**
  * Blend type for OpenGL blend function
  * @author Stanislaw Kardach
@@ -55,6 +55,7 @@ public enum BlendType {
 		case SRC_COLOR: return GL.GL_SRC_COLOR;
 		case INV_SRC_COLOR: return GL.GL_ONE_MINUS_SRC_COLOR;
 		case SRC_ALPHA: return GL.GL_SRC_ALPHA;
+		//case INV_SRC_ALPHA: return GL.GL_DST_COLOR;
 		case INV_SRC_ALPHA: return GL.GL_ONE_MINUS_SRC_ALPHA;
 		case DEST_ALPHA: return GL.GL_DST_ALPHA;
 		case INV_DEST_ALPHA: return GL.GL_ONE_MINUS_DST_ALPHA;

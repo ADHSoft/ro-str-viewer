@@ -85,8 +85,8 @@ public class StrReader {
 			if(result.get_fps() <= 0)
 				result.set_fps(DEFAULT_FPS);
 			result.set_frameCount(stream.readInt());
-			if(result.get_frameCount() < 0)
-				throw new ParseException("Framecount less than 0");
+			if(result.get_frameCount() < 1) result.set_frameCount(1);
+				//throw new ParseException("Framecount less than 0");
 			// read layers
 			int layerCount = stream.readInt();
 			if(layerCount < 0)
@@ -124,6 +124,10 @@ public class StrReader {
 		{
 			layer.get_textures().add(readTexture(textureManager, stream));
 		}
+		if (textureCount == 0) {
+			layer.get_textures().add(genericTexture(textureManager));
+		}
+		
 		int keyFrameCount = stream.readInt();
 		if(keyFrameCount > Layer.MAX_KEYFRAME_COUNT)
 			throw new ParseException("Too many key frames: " + keyFrameCount);
@@ -146,6 +150,22 @@ public class StrReader {
 		stream.read(textureNameBuffer);
 		String textureName = // this should use UTF8
 			new String(textureNameBuffer, 0, TEXTURE_NAME_SIZE).trim();
+		
+		Texture texture =
+			textureManager.getTexture(textureName);
+		if(texture == null) // if no such texture found
+			throw new ResourceException(
+				String.format(
+					"Texture [%s] could not be located",
+					textureName));
+		return texture;
+	}
+	
+	private Texture genericTexture(TextureManager textureManager) throws IOException, ResourceException {
+		
+		String textureName = // this should use UTF8
+			new String("C:\\Users\\int\\Pictures\\miro.jpg").trim();
+		
 		Texture texture =
 			textureManager.getTexture(textureName);
 		if(texture == null) // if no such texture found
@@ -169,19 +189,20 @@ public class StrReader {
 		float y = stream.readFloat();
 		keyFrame.set_position(new Point2D(x, y));
 		float u = stream.readFloat();
-		float v = stream.readFloat();
-		float us = stream.readFloat();
-		float vs = stream.readFloat();
+		float v = -stream.readFloat();  //imgs were flipped vert. int271
+		float us = stream.readFloat();	//"u size"
+		float vs = -stream.readFloat();
 		keyFrame.set_textureUVMapping(
 			new Rectangle<Point2D>(
 				new Point2D(u, v),
-				new Point2D(us,v),
-				new Point2D(u,vs),
-				new Point2D(us,vs)));
+				new Point2D((u+us),v),
+				new Point2D(u,(v+vs)),
+				new Point2D((u+us),(v+vs))));
+
 		u = stream.readFloat();
-		v = stream.readFloat();
+		v = -stream.readFloat();
 		us = stream.readFloat();
-		vs = stream.readFloat();
+		vs = -stream.readFloat();
 		keyFrame.set_textureUVMapping2(
 			new Rectangle<Point2D>(
 				new Point2D(u, v),
@@ -208,7 +229,7 @@ public class StrReader {
 		keyFrame.set_textureId(stream.readFloat());
 		keyFrame.set_animationType(AnimationType.fromInt(stream.readInt()));
 		keyFrame.set_animationDelta(stream.readFloat());
-		keyFrame.set_rotation(stream.readFloat());
+		keyFrame.set_rotation(stream.readFloat());	
 		// Read color
 		float r = stream.readFloat();
 		float g = stream.readFloat();

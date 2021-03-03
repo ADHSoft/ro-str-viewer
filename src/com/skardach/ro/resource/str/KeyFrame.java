@@ -228,21 +228,21 @@ public class KeyFrame {
 	 */
 	public String toString(String iPrefix) {
 		return
-			iPrefix + "<keyFrame "
-			+ " _framenum=\"" + _framenum + "\""
-			+ " _frameType=\"" + _frameType + "\""
-			+ " _position=\"" + _position + "\""
-			+ " _textureUVMapping=\"" + _textureUVMapping + "\""
-			+ " _textureUVMapping2=\"" + _textureUVMapping2 + "\""
-			+ " _drawingRectangle=\"" + _drawingRectangle + "\""
-			+ " _textureId=\"" + _textureId + "\""
-			+ " _animationType=\"" + _animationType + "\""
-			+ " _animationDelta=\"" + _animationDelta + "\""
-			+ " _rotation=\"" + _rotation + "\""
-			+ " _color=\"" + _color + "\""
-			+ " _sourceBlend=\"" + _sourceBlend + "\""
-			+ " _destBlend=\"" + _destBlend + "\""
-			+ " _multiTexturePreset=\"" + _multiTexturePreset + "\""
+			iPrefix + (_frameType== _frameType.BASIC ? "<keyFrame ":"<morphFr. ")  
+			//+ " Type=\"" + _frameType + "\""
+			+ " Fr#=\"" + _framenum + "\""			
+			+ " tex#=\"" + _textureId + "\""
+			+ (_animationType!= _animationType.NO_CHANGE ? 
+					(" aniType=\"" + _animationType + "\" aniDelta=\"" + _animationDelta + "\"" ):"")
+			+ " pos=\"" + _position + "\""
+			+ " texUV=\"" + _textureUVMapping.get_a() + _textureUVMapping.get_d() + "\""
+			+ " texUV2=\"" + _textureUVMapping2.get_a() + _textureUVMapping2.get_d() + "\""
+			+ " Rectangle=\"" + _drawingRectangle.get_a() + _drawingRectangle.get_d() + "\""
+			+ " rotation=\"" + _rotation + "\""
+			+ " color=\"" + _color + "\""
+			+ " sourceBlend=\"" + _sourceBlend + "\""
+			+ " destBlend=\"" + _destBlend + "\""
+			+ (_multiTexturePreset!= _multiTexturePreset.NO_CHANGE ? (" multiTexturePreset=" + _multiTexturePreset ):"")
 			+ " />";
 	}
 

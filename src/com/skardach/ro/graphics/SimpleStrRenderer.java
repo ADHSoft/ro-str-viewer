@@ -2,10 +2,10 @@ package com.skardach.ro.graphics;
 
 import java.util.List;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.glu.GLU;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.glu.GLU;
 
 import com.skardach.ro.common.ObjectHolder;
 import com.skardach.ro.resource.ResourceException;
@@ -14,6 +14,7 @@ import com.skardach.ro.resource.str.KeyFrame;
 import com.skardach.ro.resource.str.KeyFrameType;
 import com.skardach.ro.resource.str.Layer;
 import com.skardach.ro.resource.str.Str;
+import com.skardach.ro.resource.str.AnimationType;
 
 /**
  * Simple implementation of rendering STR files. Most of the credit goes to
@@ -23,7 +24,7 @@ import com.skardach.ro.resource.str.Str;
  *
  */
 public class SimpleStrRenderer implements Renderer {
-	private static final float STR_ANGLE_TO_DEGREES = 2.8444f;
+	private static final float STR_ANGLE_TO_DEGREES =1f; //= 2.8444f;
 
 	// OpenGL utilities
 	GLU _glu = new GLU();
@@ -207,14 +208,13 @@ public class SimpleStrRenderer implements Renderer {
 
 		if (_currentBaseFrameOnLayer[iLayerNumber]
 			!= FrameAdvanceCalculator.NO_FRAME) {
-			// We have a base frame to work on...
+			//We have a base frame to work on...
 			float currentcolor[] = new float[4];
 			iGL.glGetFloatv(GL2.GL_CURRENT_COLOR, currentcolor, 0);
 			KeyFrame baseFrame =
 				iLayer.get_keyFrames().get(
 					_currentBaseFrameOnLayer[iLayerNumber]);
-			// if alpha is more than 0, something is visible so let's draw
-			if (baseFrame.get_color()._alpha > 0) {
+			if ( true ) {
 				Color finalColor = new Color(baseFrame.get_color());
 				Point2D finalPosition =
 						new Point2D( // translate by character size
@@ -235,8 +235,9 @@ public class SimpleStrRenderer implements Renderer {
 						new Point2D(baseFrame.get_textureUVMapping().get_b()),
 						new Point2D(baseFrame.get_textureUVMapping().get_c()),
 						new Point2D(baseFrame.get_textureUVMapping().get_d()));
-				Texture texture =
-					iLayer.get_textures().get((int)baseFrame.get_textureId());
+				
+				float finalTextureId =baseFrame.get_textureId();
+
 
 				if (_currentAnimationFrameOnLayer[iLayerNumber]
 					!= FrameAdvanceCalculator.NO_FRAME) {
@@ -245,28 +246,36 @@ public class SimpleStrRenderer implements Renderer {
 							_currentAnimationFrameOnLayer[iLayerNumber]);
 					applyAnimationFrame(animationFrame, iFrameToRender,
 							finalColor, finalPosition, finalRotation,
-							finalRectangle, finalTextureMapping);
+							finalRectangle, finalTextureMapping , 0);
+										
 				}
-				iGL.glPushMatrix();
-
-				Billboard(iGL);
-				iGL.glColor4ub(
-					(byte)finalColor._r,
-					(byte)finalColor._g,
-					(byte)finalColor._b,
-					(byte)finalColor._alpha);
-				iGL.glTranslatef(
-					finalPosition._x,
-					finalPosition._y,
-					0f);
-				iGL.glRotatef(finalRotation.getObject(), 0, 0, 1);
-
-				iGL.glBlendFunc(
-						baseFrame.get_sourceBlend().toGLValue(),
-						baseFrame.get_destBlend().toGLValue());
-
-				iGL.glEnable(GL.GL_BLEND);
-
+				
+				//finalTextureId=(float)Math.random()*10;
+				
+				//prevent out of bounds
+				if (finalTextureId<0) {
+					finalTextureId*=-1;
+				}
+				
+				if ( baseFrame.get_animationType() != AnimationType.NO_CHANGE ) {
+					finalTextureId += 
+							(baseFrame.get_animationDelta() +0) * 2 *
+							(iFrameToRender - baseFrame.get_framenum() +0);
+					
+					//System.out.print(finalTextureId + " ");
+				}
+				
+				if ( baseFrame.get_animationType() == AnimationType.TYPE_2 && ((int)finalTextureId >= iLayer.get_textures().size()) ) {
+					finalTextureId=(float)(iLayer.get_textures().size()-1);		
+				
+				}
+				
+				finalTextureId%=iLayer.get_textures().size();
+				
+					
+				Texture texture =
+						iLayer.get_textures().get((int)finalTextureId);		
+				
 				if(!texture.isLoaded())
 					try {
 						texture.load(iGL);
@@ -277,10 +286,57 @@ public class SimpleStrRenderer implements Renderer {
 							+ ". Reason: "
 							+ e);
 					}
-				texture.bind(iGL);
+				
+				if (iLayerNumber==0) {
+					iGL.glDisable(GL2.GL_TEXTURE_2D);
+					
+					finalRectangle._a._x = -400;
+					finalRectangle._a._y = 300;
+					finalRectangle._b._x = 400;
+					finalRectangle._b._y = 300;
+					finalRectangle._d._x = -400;
+					finalRectangle._d._y = -300;
+					finalRectangle._c._x = 400;
+					finalRectangle._c._y = -300;
+					
+					iGL.glBlendFunc( GL2.GL_ONE,GL2.GL_ZERO);			
 
+					
+				} else {
+					iGL.glEnable(GL2.GL_TEXTURE_2D);
+
+					
+					// linear filter
+					iGL.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR); // or NEAREST
+					
+				}
+				
+				texture.bind(iGL);				
+				iGL.glPushMatrix();
+
+				Billboard(iGL);
+				iGL.glColor4ub(
+					(byte)finalColor._r,
+					(byte)finalColor._g,
+					(byte)finalColor._b,
+					(byte)finalColor._alpha);
+				
+				iGL.glTranslatef(
+					finalPosition._x,
+					finalPosition._y,
+					0f);
+				iGL.glRotatef(finalRotation.getObject(), 0, 0, 1);
+
+				iGL.glEnable(GL.GL_BLEND);
+
+				iGL.glBlendFunc( baseFrame.get_sourceBlend().toGLValue(),
+				baseFrame.get_destBlend().toGLValue());			
+
+				
 				iGL.glColorMask(true, true, true, false);
-				iGL.glBegin(GL2.GL_QUADS);
+;
+				iGL.glBegin(GL2.GL_QUADS);				//BEGIN ----------------
+				
 				iGL.glTexCoord2f(
 					finalTextureMapping._d._x,
 					finalTextureMapping._d._y);
@@ -364,17 +420,20 @@ public class SimpleStrRenderer implements Renderer {
 	 * @param ioFinalRotation Rotation of the texture to modify
 	 * @param ioFinalRectangle Texture rectangle to modify
 	 * @param ioFinalTextureMapping Texture mapping to modify
+	 * @param ioFinalTextureMapping Texture mapping to modify
 	 */
 	private void applyAnimationFrame(KeyFrame iAnimationFrame,
 			int iFrameToRender, Color ioFinalColor, Point2D ioFinalPosition,
 			ObjectHolder<Float> ioFinalRotation, Rectangle<Point2D> ioFinalRectangle,
-			Rectangle<Point2D> ioFinalTextureMapping) {
+			Rectangle<Point2D> ioFinalTextureMapping, float ioFinalTextureId) {
 		int anifactor =
 			iFrameToRender - iAnimationFrame.get_framenum();
+		
+			
 		ioFinalColor._r += iAnimationFrame.get_color()._r * anifactor;
 		ioFinalColor._g += iAnimationFrame.get_color()._g * anifactor;
 		ioFinalColor._b += iAnimationFrame.get_color()._b * anifactor;
-		ioFinalColor._alpha +=
+		ioFinalColor._alpha += 
 			iAnimationFrame.get_color()._alpha * anifactor;
 		ioFinalPosition._x +=
 			iAnimationFrame.get_position()._x * anifactor;

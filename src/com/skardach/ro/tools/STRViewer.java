@@ -1,6 +1,7 @@
 package com.skardach.ro.tools;
 
 import java.awt.Button;
+import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -14,7 +15,7 @@ import java.io.FilenameFilter;
 import java.io.InputStream;
 
 
-import javax.media.opengl.awt.GLCanvas;
+import com.jogamp.opengl.awt.GLCanvas;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -39,6 +40,14 @@ import com.skardach.ro.resource.str.StrReader.ParseException;
  * @author Stanislaw Kardach
  *
  */
+
+/*
+ * public static void main(String[] args) { java.awt.EventQueue.invokeLater(new
+ * Runnable() { public void run() { FrameWithBorderLayout frame = new
+ * FrameWithBorderLayout(); frame.setVisible(true); } }); }
+ */
+
+
 public class STRViewer extends JFrame {
 	private static final long serialVersionUID = -9077621002191789823L;
 	/**
@@ -83,7 +92,7 @@ public class STRViewer extends JFrame {
 	 */
 	public STRViewer() {
 		setTitle(Settings.WINDOW_TITLE);
-		getContentPane().setLayout(new GridLayout(2, 1));
+		getContentPane().setLayout(new GridLayout(1, 2));
 		_glWrapper = OpenGLWrapper.createDesktopWrapper(Settings.FPS);
 		// OpenGL canvas
 		_canvas = _glWrapper.createGLCanvasWithAnimator();
@@ -92,11 +101,13 @@ public class STRViewer extends JFrame {
 		_infoArea = new JTextArea();
 		_infoArea.setDoubleBuffered(true);
 		_infoArea.setEditable(false);
+		_infoArea.setSize(40, 100);
 		JScrollPane scrollPane = new JScrollPane(_infoArea);
 		scrollPane.setDoubleBuffered(true);
 		JPanel panel = new JPanel(true);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		panel.add(scrollPane);
+		panel.setSize(28,28);
 		// vertical stack panel for start/stop, pause/resume buttons
 		JPanel buttonPanel = new JPanel(true);
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
@@ -157,14 +168,14 @@ public class STRViewer extends JFrame {
 
 		addWindowListener(new WindowAdapter() {
 			@Override
-			public void windowClosing(WindowEvent e) {
+			public void windowClosing( WindowEvent e ) {
 				stop();
 				// FIXME: I'm making a shortcut here... proper cleaning needed
 				System.exit(0);
 			}
 		});
 		pack();
-		setSize(800, 600);
+		setSize(1300, 600);
 	}
 
 	private void start() {

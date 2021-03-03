@@ -55,7 +55,7 @@ public enum AnimationType {
 	 *   aniframe = value - lasttex * n;</pre>
 	 */
 	TYPE_5;
-
+	
 	static AnimationType fromInt(int iMode)
 	{
 		switch(iMode) {
@@ -68,6 +68,21 @@ public enum AnimationType {
 		default:
 			System.err.println("Unknown AnimationType: " + iMode);
 			return UNKNOWN;
+		}
+	}
+
+
+	@Override
+	public String toString()
+	{
+		switch(this) {
+		case NO_CHANGE: return "Static";
+		case TYPE_1: return "??TYPE_1";
+		case TYPE_2: return "Play Once";
+		case TYPE_3: return "Loop";
+		case TYPE_4: return "??Play backwards?";
+		case TYPE_5: return "Loop back and forth";
+		default: return "?(see Log)";
 		}
 	}
 }

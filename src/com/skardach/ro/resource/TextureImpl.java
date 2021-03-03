@@ -7,8 +7,8 @@ import java.nio.Buffer;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
 
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
@@ -24,7 +24,7 @@ public class TextureImpl implements Texture {
 	TextureData _data;
 	com.jogamp.opengl.util.texture.Texture _joglTexture;
 	Integer _GLName = null;
-	private boolean _convertMagenta;
+	private boolean _convertMagenta=false;
 	/**
 	 * Construct the texture with given relative path (name) and base path
 	 * @param iName Name of the texture, being the relative path to the
@@ -40,8 +40,9 @@ public class TextureImpl implements Texture {
 	public TextureImpl(
 			String iName,
 			String iBasePath,
-			boolean iConvertMagenta) {
-		_name = iName;
+			boolean iConvertMagenta) {// int271
+		//iTextureName=iTextureName.replaceAll("\0", "").replaceAll("ÿ", "").replaceAll(".bmp", "");
+		_name = iName.replaceAll("\0", "").replaceAll("ÿ", "").replaceAll(".bmp", "");
 		_path = iBasePath;
 		_convertMagenta = iConvertMagenta;
 	}
@@ -92,6 +93,9 @@ public class TextureImpl implements Texture {
 		try {
 			// Read the image
 			File textureFile = new File(_path, _name);
+			if(!textureFile.exists()) { 
+				textureFile = new File("%userprofile%\\Pictures\\pentalogo1.png");
+			}
 			_data = TextureIO.newTextureData(
 				iGLContext.getGLProfile(),
 				textureFile,
@@ -101,7 +105,7 @@ public class TextureImpl implements Texture {
 				throw new ResourceException(
 					"Could not read texture " + _name);
 			if(_convertMagenta)
-				convertMagentaToAlphaIfNeeded();
+				;//convertMagentaToAlphaIfNeeded(); int271
 			// create the texture
 			_joglTexture = TextureIO.newTexture(_data);
 			// set some parameters
@@ -116,11 +120,14 @@ public class TextureImpl implements Texture {
 			_joglTexture.setTexParameterf(
 				iGLContext,
 				GL.GL_TEXTURE_MAG_FILTER,
-				GL.GL_NEAREST);
+				GL.GL_LINEAR);
+			//_joglTexture.setTexParameterf(iGLContext, GL.GL_BLEND,1.f);
 			iGLContext.glTexEnvf(
 				GL2.GL_TEXTURE_ENV,
 				GL2.GL_TEXTURE_ENV_MODE,
 				GL2.GL_MODULATE);
+
+			iGLContext.glColor3f(0, 1, 1);
 		} catch (IOException e) {
 			throw new ResourceException(
 				"Error loading texture from file: "

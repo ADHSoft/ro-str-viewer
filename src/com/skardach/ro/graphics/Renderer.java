@@ -1,6 +1,6 @@
 package com.skardach.ro.graphics;
 
-import javax.media.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLAutoDrawable;
 
 import com.skardach.ro.resource.ResourceException;
 

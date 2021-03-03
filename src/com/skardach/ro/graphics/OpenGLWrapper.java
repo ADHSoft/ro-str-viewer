@@ -5,19 +5,21 @@ import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.LinkedList;
 
-import javax.media.opengl.DebugGL2;
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLCapabilities;
-import javax.media.opengl.GLEventListener;
-import javax.media.opengl.GLProfile;
-import javax.media.opengl.awt.GLCanvas;
-import javax.media.opengl.glu.GLU;
+import com.jogamp.opengl.DebugGL2;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.awt.GLCanvas;
+import com.jogamp.opengl.glu.GLU;
 
 import com.jogamp.common.util.IOUtil;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.skardach.ro.resource.ResourceException;
+
+
 
 /**
  * OpenGL wrapper class which is used in business logic to separate it from the
@@ -40,8 +42,8 @@ public class OpenGLWrapper {
 
 	// Settings. TODO: This should be configurable
 	private static class Settings {
-		public static final float CLIPPING_NEAR = 1.0f;
-		public static final float CLIPPING_FAR = 1000.0f;
+		public static final float CLIPPING_NEAR = 0.1f;
+		public static final float CLIPPING_FAR = 10000.0f;
 		public static final float PERSPECTIVE_ANGLE = 45.0f;
 	}
 
@@ -55,10 +57,10 @@ public class OpenGLWrapper {
 	 */
 	private class CanvasEventHandler implements GLEventListener, KeyListener {
 		int _eyeX = 0;
-		int _eyeY = 100;
-		int _eyeZ = 600;
+		int _eyeY = -20;
+		int _eyeZ = 700;
 		int _centerX = 0;
-		int _centerY = 100;
+		int _centerY = -20;
 		int _centerZ = 0;
 
 		@Override
@@ -85,8 +87,8 @@ public class OpenGLWrapper {
 				Settings.PERSPECTIVE_ANGLE,
 				Settings.CLIPPING_NEAR,
 				Settings.CLIPPING_FAR,
-				drawable.getWidth(),
-				drawable.getHeight(),
+				drawable.getSurfaceWidth(),
+				drawable.getSurfaceHeight(),
 				_eyeX,
 				_eyeY,
 				_eyeZ,
@@ -291,13 +293,14 @@ public class OpenGLWrapper {
 		gl.glDepthFunc(GL.GL_LEQUAL);
 		gl.glDepthMask(true);
 		gl.glEnable(GL.GL_TEXTURE_2D);
+		gl.glEnable(GL.GL_BLEND);
 		gl.glShadeModel(GL2.GL_SMOOTH);
 		gl.glClearColor(0.2f, 0.2f, 0.2f, 1f);
 		gl.glClearDepth(1.0f);
 		// Remove old shaders if exist
 		destroyPinkRemoverShaderProgram(gl);
 		// add new shader
-		createPinkRemoverShaderProgram(gl);
+		//createPinkRemoverShaderProgram(gl); //int271 this line prevented color effects
 	}
 
 	/**
@@ -438,6 +441,7 @@ public class OpenGLWrapper {
 		gl.glVertex3i(0, 0, 100);
 		gl.glEnd();
 		// restore environment
+		gl.glColorMask(true, true, true, true);
 		gl.glColor4f(currentcolor[0], currentcolor[1], currentcolor[2],
 				currentcolor[3]);
 		gl.glPopMatrix();

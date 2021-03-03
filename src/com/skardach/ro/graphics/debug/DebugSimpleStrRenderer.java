@@ -3,8 +3,8 @@ package com.skardach.ro.graphics.debug;
 import java.awt.Font;
 import java.util.Arrays;
 
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
 
 import com.jogamp.opengl.util.awt.TextRenderer;
 import com.skardach.ro.graphics.FrameAdvanceCalculator;
@@ -68,7 +68,7 @@ public class DebugSimpleStrRenderer extends SimpleStrRenderer {
 	protected void beforeRender(GL2 iGL, GLAutoDrawable ioCanvas, long iDelaySinceLastInvoke) {
 		if(_textRenderer == null)
 			_textRenderer = new TextRenderer(new Font("SansSerif", Font.BOLD, 14));
-		_textRenderer.beginRendering(ioCanvas.getWidth(), ioCanvas.getHeight());
+		_textRenderer.beginRendering(ioCanvas.getSurfaceWidth(), ioCanvas.getSurfaceHeight());
 		_textRenderer.setColor(1, 1, 1, 1);
 		_textRenderer.draw("[Before] Frame: " + _lastRenderedFrame, 10, 64);
 		_textRenderer.draw("[Before] Frame to render: " + _frameAdvanceCalculator.calculateFrameToRender(iDelaySinceLastInvoke, _lastRenderedFrame), 10, 46);
@@ -85,7 +85,7 @@ public class DebugSimpleStrRenderer extends SimpleStrRenderer {
 	 */
 	protected void afterRender(GL2 iGL, GLAutoDrawable ioCanvas) {
 		super.afterRender(iGL);
-		_textRenderer.beginRendering(ioCanvas.getWidth(), ioCanvas.getHeight());
+		_textRenderer.beginRendering(ioCanvas.getSurfaceWidth(), ioCanvas.getSurfaceHeight());
 		_textRenderer.setColor(1, 1, 1, 1);
 		_textRenderer.draw("[After]  Frame: " + _lastRenderedFrame, 10, 122);
 		_textRenderer.draw("[After]  BasicFrames: " + Arrays.toString(_currentBaseFrameOnLayer), 10, 104);
