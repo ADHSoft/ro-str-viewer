@@ -34,7 +34,6 @@ public class SimpleTextureManager implements TextureManager {
 			iTextureName=iTextureName.substring(0, 0x30); //truncate junk
 		}
 		iTextureName=iTextureName.replaceAll("\0", "").replaceAll("ÿ", "");
-		iTextureName=iTextureName.replaceAll(".bmp", "");
 		//System.out.println(iTextureName);
 		
 		Texture result = null;

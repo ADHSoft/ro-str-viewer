@@ -164,7 +164,7 @@ public class StrReader {
 	private Texture genericTexture(TextureManager textureManager) throws IOException, ResourceException {
 		
 		String textureName = // this should use UTF8
-			new String("C:\\Users\\int\\Pictures\\miro.jpg").trim();
+			new String(System.getProperty("user.home") + "\\Pictures\\placeholderstr.png").trim();
 		
 		Texture texture =
 			textureManager.getTexture(textureName);

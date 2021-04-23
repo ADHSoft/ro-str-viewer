@@ -42,7 +42,7 @@ public class TextureImpl implements Texture {
 			String iBasePath,
 			boolean iConvertMagenta) {// int271
 		//iTextureName=iTextureName.replaceAll("\0", "").replaceAll("ÿ", "").replaceAll(".bmp", "");
-		_name = iName.replaceAll("\0", "").replaceAll("ÿ", "").replaceAll(".bmp", "");
+		_name = iName.replaceAll("\0", "").replaceAll("ÿ", "");
 		_path = iBasePath;
 		_convertMagenta = iConvertMagenta;
 	}
@@ -94,7 +94,8 @@ public class TextureImpl implements Texture {
 			// Read the image
 			File textureFile = new File(_path, _name);
 			if(!textureFile.exists()) { 
-				textureFile = new File("%userprofile%\\Pictures\\pentalogo1.png");
+				String path = System.getProperty("user.home") + "\\Pictures\\placeholderstr.png";
+				textureFile = new File(path);
 			}
 			_data = TextureIO.newTextureData(
 				iGLContext.getGLProfile(),
