@@ -9,8 +9,13 @@ This is a crude try by a guy who has little experience with Computer Graphics, l
 -------------
 
 ADHsoft contribution:
+
 Added .vce compatibility (djmax, ez2dj files, but must be converted to str first)
+
 Fixed U,V coordinates management, GL blending, texture changes, rotation factor
-Updated OpenGL libraries new names
-Fixed crashes on special situations
-temporarily disabled pinkRemover shader to have png transparency
+
+Updated OpenGL libraries: new names have been put
+
+Fixed crashes on border cases
+
+Temporarily disabled pinkRemover shader to have png transparency
