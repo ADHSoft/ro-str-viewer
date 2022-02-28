@@ -189,7 +189,7 @@ public class StrReader {
 		float y = stream.readFloat();
 		keyFrame.set_position(new Point2D(x, y));
 		float u = stream.readFloat();
-		float v = -stream.readFloat();  //imgs were flipped vert. int271
+		float v = -stream.readFloat();  //imgs were flipped vert. (changed)
 		float us = stream.readFloat();	//"u size"
 		float vs = -stream.readFloat();
 		keyFrame.set_textureUVMapping(
@@ -199,16 +199,16 @@ public class StrReader {
 				new Point2D(u,(v+vs)),
 				new Point2D((u+us),(v+vs))));
 
-		u = stream.readFloat();
+		u = stream.readFloat();	//MultiTexture (2nd texture U,V,Us,Vs) (unimplemented)
 		v = -stream.readFloat();
 		us = stream.readFloat();
 		vs = -stream.readFloat();
 		keyFrame.set_textureUVMapping2(
 			new Rectangle<Point2D>(
 				new Point2D(u, v),
-				new Point2D(us,v),
-				new Point2D(u,vs),
-				new Point2D(us,vs)));
+				new Point2D((u+us),v),
+				new Point2D(u,(v+vs)),
+				new Point2D((u+us),(v+vs))));
 		// Rectangle corners' coordinates
 		// x coordinates first
 		float ax = stream.readFloat();

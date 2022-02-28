@@ -40,7 +40,7 @@ public class TextureImpl implements Texture {
 	public TextureImpl(
 			String iName,
 			String iBasePath,
-			boolean iConvertMagenta) {// int271
+			boolean iConvertMagenta) {// changed
 		//iTextureName=iTextureName.replaceAll("\0", "").replaceAll("ÿ", "").replaceAll(".bmp", "");
 		_name = iName.replaceAll("\0", "").replaceAll("ÿ", "");
 		_path = iBasePath;
@@ -100,13 +100,14 @@ public class TextureImpl implements Texture {
 			_data = TextureIO.newTextureData(
 				iGLContext.getGLProfile(),
 				textureFile,
+				//GL.GL_,GL.GL_UNSIGNED_INT,
 				false,
 				extension);
 			if(_data == null)
 				throw new ResourceException(
 					"Could not read texture " + _name);
 			if(_convertMagenta)
-				;//convertMagentaToAlphaIfNeeded(); int271
+				;//convertMagentaToAlphaIfNeeded(); changed
 			// create the texture
 			_joglTexture = TextureIO.newTexture(_data);
 			// set some parameters

@@ -231,10 +231,10 @@ public class SimpleStrRenderer implements Renderer {
 						new Point2D(baseFrame.get_drawingRectangle().get_d()));
 				Rectangle<Point2D> finalTextureMapping =
 					new Rectangle<Point2D>(
-						new Point2D(baseFrame.get_textureUVMapping().get_a()),
-						new Point2D(baseFrame.get_textureUVMapping().get_b()),
+						new Point2D(baseFrame.get_textureUVMapping().get_d()),
 						new Point2D(baseFrame.get_textureUVMapping().get_c()),
-						new Point2D(baseFrame.get_textureUVMapping().get_d()));
+						new Point2D(baseFrame.get_textureUVMapping().get_b()),
+						new Point2D(baseFrame.get_textureUVMapping().get_a()));
 				
 				float finalTextureId =baseFrame.get_textureId();
 
@@ -272,20 +272,24 @@ public class SimpleStrRenderer implements Renderer {
 				
 				finalTextureId%=iLayer.get_textures().size();
 				
+				if (iLayerNumber !=0) {
+					Texture texture =
+							
+							iLayer.get_textures().get((int)finalTextureId);		
 					
-				Texture texture =
-						iLayer.get_textures().get((int)finalTextureId);		
-				
-				if(!texture.isLoaded())
-					try {
-						texture.load(iGL);
-					} catch (ResourceException e) {
-						throw new RenderException(
-							"Could not load texture: "
-							+ texture
-							+ ". Reason: "
-							+ e);
-					}
+					if(!texture.isLoaded())
+						try {
+							texture.load(iGL);
+						} catch (ResourceException e) {
+							throw new RenderException(
+								"Could not load texture: "
+								+ texture
+								+ ". Reason: "
+								+ e);
+						}
+					
+					texture.bind(iGL);	
+				}
 				
 				if (iLayerNumber==0) {
 					iGL.glDisable(GL2.GL_TEXTURE_2D);
@@ -309,9 +313,11 @@ public class SimpleStrRenderer implements Renderer {
 					// linear filter
 					iGL.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR); // or NEAREST
 					
+					
+					
 				}
 				
-				texture.bind(iGL);				
+							
 				iGL.glPushMatrix();
 
 				Billboard(iGL);
@@ -333,7 +339,7 @@ public class SimpleStrRenderer implements Renderer {
 				baseFrame.get_destBlend().toGLValue());			
 
 				
-				iGL.glColorMask(true, true, true, false);
+				iGL.glColorMask(true, true, true, true);
 ;
 				iGL.glBegin(GL2.GL_QUADS);				//BEGIN ----------------
 				

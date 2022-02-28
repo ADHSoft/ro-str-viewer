@@ -23,13 +23,13 @@ public class SimpleTextureManager implements TextureManager {
 	 */
 	public SimpleTextureManager(String iBasePath, boolean iTexturesConvertMagenta) {
 		//iBasePath += "\\" ;
-		_textureBaseDir = iBasePath;	//int271 
+		_textureBaseDir = iBasePath;	//changed
 		_convertMagenta = false;//iTexturesConvertMagenta;
 	}
 
 	@Override
 	public Texture getTexture(String iTextureName) {
-		//System.out.println(iTextureName);		//int271
+		//System.out.println(iTextureName);		//changed
 		if (iTextureName.length()>0x2e) {
 			iTextureName=iTextureName.substring(0, 0x30); //truncate junk
 		}

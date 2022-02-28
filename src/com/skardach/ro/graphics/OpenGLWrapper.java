@@ -300,7 +300,7 @@ public class OpenGLWrapper {
 		// Remove old shaders if exist
 		destroyPinkRemoverShaderProgram(gl);
 		// add new shader
-		//createPinkRemoverShaderProgram(gl); //int271 this line prevented color effects
+		//createPinkRemoverShaderProgram(gl); // this line prevented color effects
 	}
 
 	/**

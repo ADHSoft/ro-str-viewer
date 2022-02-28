@@ -77,11 +77,11 @@ public enum AnimationType {
 	{
 		switch(this) {
 		case NO_CHANGE: return "Static";
-		case TYPE_1: return "??TYPE_1";
+		case TYPE_1: return "Static";
 		case TYPE_2: return "Play Once";
 		case TYPE_3: return "Loop";
-		case TYPE_4: return "??Play backwards?";
-		case TYPE_5: return "Loop back and forth";
+		case TYPE_4: return "Loop backwards";
+		case TYPE_5: return "Loop pingPong";
 		default: return "?(see Log)";
 		}
 	}

@@ -24,7 +24,7 @@ public enum KeyFrameType {
 	 */
 	public static KeyFrameType fromInt(int iType)
 	{
-		if( ( iType % 2) == 1 ) //int271
+		if( ( iType % 2) == 1 ) //changed
 			return MORPH;
 		else 
 			return BASIC;

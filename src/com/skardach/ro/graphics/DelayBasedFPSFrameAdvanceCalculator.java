@@ -28,7 +28,7 @@ public class DelayBasedFPSFrameAdvanceCalculator implements FrameAdvanceCalculat
 	 * @param iLastRenderedFrame Number of frame that was previously rendered
 	 * @return
 	 */
-	public int calculateFrameToRender(
+	public int calculateFrameToRender(	//toDo fix speed
 			long iDelaySinceLastInvoke,
 			int iLastRenderedFrame) {
 		int frameToRender = 0;
@@ -37,10 +37,10 @@ public class DelayBasedFPSFrameAdvanceCalculator implements FrameAdvanceCalculat
 				iLastRenderedFrame // last frame rendered
 				+ (int)(( // + delay since last frame / time for single frame
 					iDelaySinceLastInvoke + _timeRemainderSinceLastFrame)
-					/ (1000.0f/_fps)); // 1s / FPS
+					/ (700.0f/_fps)); // 1s / FPS
 			_timeRemainderSinceLastFrame =
 					 ((float)(iDelaySinceLastInvoke + _timeRemainderSinceLastFrame)
-					% (1000.0f/_fps));
+					% (700.0f/_fps));
 		}
 		return frameToRender;
 	}

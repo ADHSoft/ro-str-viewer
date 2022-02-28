@@ -253,11 +253,13 @@ public class STRViewer extends JFrame {
 		setVisible(false);
 		_glWrapper.stopAnimation();
 		_glWrapper.destroyCanvas(_canvas);
+		
+		//start();
 		dispose();
 	}
 
 	private File chooseFile() {
-		FileDialog fd = new FileDialog(this, "Select STR file");
+		FileDialog fd = new FileDialog(this, "Select STR filee");
 		fd.setFilenameFilter(new FilenameFilter() {
 
 			@Override
